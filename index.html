@@ -51,20 +51,12 @@
   @keyframes bounce { 0%,100%{transform:translateY(0) rotate(-4deg)} 50%{transform:translateY(-18px) rotate(4deg)} }
   .gate-title { font-family:'Baloo 2',cursive; font-size:clamp(1.6rem,4.5vw,2.6rem); color:#ffd166; margin:14px 0 6px; }
   .gate-sub { color:#c7b8ff; margin-bottom:26px; }
-  .countdown-card { background:rgba(255,255,255,.07); border:1px solid rgba(192,132,252,.45); border-radius:24px;
-    padding:26px; max-width:640px; box-shadow:0 0 50px rgba(192,132,252,.3); }
-  .timer { display:flex; justify-content:center; gap:12px; flex-wrap:wrap; }
-  .timer div { background:linear-gradient(145deg,#2b1055,#411d8f); border-radius:16px; padding:14px 8px; min-width:80px;
-    box-shadow:0 6px 18px rgba(0,0,0,.5), inset 0 0 20px rgba(192,132,252,.15); }
-  .timer b { display:block; font-size:clamp(1.5rem,4vw,2.2rem); color:#ffd166; }
-  .timer small { color:#c7b8ff; font-size:.7rem; letter-spacing:1px; }
-  .unlock-btn { display:none; margin-top:22px; font-size:1.2rem; font-weight:600; padding:16px 38px; border:none; border-radius:50px;
+  .unlock-btn { font-size:1.2rem; font-weight:600; padding:16px 38px; border:none; border-radius:50px;
     cursor:pointer; color:#1a0533; background:linear-gradient(90deg,#ffd166,#ef476f,#c084fc); background-size:200% auto;
     box-shadow:0 0 30px rgba(239,71,111,.6); animation:shine 2s linear infinite, pulse 1.2s ease-in-out infinite; }
   @keyframes shine { to{background-position:200% center} }
-  .burst-msg { display:none; margin-top:14px; font-size:1.15rem; color:#ffd166; animation:pulse 1s infinite; }
 
-  /* ============ Surprise (hidden until unlock) ============ */
+  /* ============ Surprise ============ */
   #surprise { display:none; }
   #surprise.show { display:block; animation:fadeIn 1.4s ease; }
   @keyframes fadeIn { from{opacity:0} to{opacity:1} }
@@ -74,21 +66,28 @@
     animation:popIn 1s cubic-bezier(.2,1.6,.4,1) both; }
   @keyframes popIn { from{transform:scale(.2) rotate(-8deg); opacity:0} to{transform:scale(1) rotate(0); opacity:1} }
 
-  .wish-card { background:rgba(255,255,255,.06); border-left:4px solid #ef476f; border-radius:18px;
-    padding:20px 24px; margin:18px auto; max-width:760px; text-align:left; font-size:1.05rem; line-height:1.7;
-    opacity:0; transform:translateY(40px) scale(.96); transition:all .9s cubic-bezier(.2,.8,.2,1); backdrop-filter:blur(4px); }
-  .wish-card.show { opacity:1; transform:translateY(0) scale(1); }
-  .wish-card:nth-child(even){ border-color:#7ef9ff; }
-  .wish-card:nth-child(3n){ border-color:#ffd166; }
-  .wish-card b { color:#ffd166; }
+  /* Short keyword wishes */
+  .wishes { margin-top:40px; display:flex; flex-wrap:wrap; gap:14px; justify-content:center; }
+  .wish-chip { background:rgba(255,255,255,.07); border:1px solid rgba(192,132,252,.4); border-radius:50px;
+    padding:12px 24px; font-size:1.05rem; backdrop-filter:blur(4px); opacity:0; transform:scale(.6);
+    transition:all .7s cubic-bezier(.2,1.4,.4,1); }
+  .wish-chip.show { opacity:1; transform:scale(1); }
+  .wish-chip b { color:#ffd166; }
+  .wish-chip:nth-child(even) b { color:#7ef9ff; }
+  .wish-chip:nth-child(3n) b { color:#f8b4d9; }
 
+  /* Animated gallery */
   .gallery { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:20px; margin-top:40px; }
-  .polaroid { background:#fff; padding:10px 10px 26px; border-radius:8px; transform:rotate(var(--r)) scale(0); opacity:0;
-    transition:transform .6s cubic-bezier(.2,1.4,.4,1), opacity .6s ease, box-shadow .35s ease;
-    box-shadow:0 10px 30px rgba(0,0,0,.45); }
-  .polaroid.in { transform:rotate(var(--r)) scale(1); opacity:1; }
-  .polaroid:hover { transform:rotate(0) scale(1.06); z-index:5; box-shadow:0 18px 50px rgba(192,132,252,.6); }
-  .polaroid img { width:100%; height:280px; object-fit:cover; border-radius:4px; display:block; }
+  .polaroid { background:#fff; padding:10px 10px 26px; border-radius:8px; opacity:0;
+    transform:translateY(60px) rotate(var(--r)) scale(.8);
+    transition:transform .7s cubic-bezier(.2,1.4,.4,1), opacity .7s ease, box-shadow .35s ease;
+    box-shadow:0 10px 30px rgba(0,0,0,.45); animation:wiggle 5s ease-in-out infinite; animation-delay:var(--wd); }
+  .polaroid.in { opacity:1; transform:translateY(0) rotate(var(--r)) scale(1); }
+  @keyframes wiggle { 0%,100%{translate:0 0} 50%{translate:0 -8px} }
+  .polaroid:hover { transform:rotate(0) scale(1.08); z-index:5; box-shadow:0 18px 50px rgba(192,132,252,.6); animation-play-state:paused; }
+  .polaroid img { width:100%; height:280px; object-fit:cover; border-radius:4px; display:block;
+    transition:transform .5s ease; }
+  .polaroid:hover img { transform:scale(1.08); }
   .polaroid p { color:#333; font-family:'Dancing Script',cursive; font-size:1.15rem; text-align:center; margin-top:10px; }
 
   .final { margin-top:70px; padding:40px 20px; }
@@ -102,7 +101,14 @@
   .confetti { position:fixed; top:-20px; z-index:4; font-size:20px; animation:fall linear forwards; pointer-events:none; }
   @keyframes fall { to{ transform:translateY(105vh) rotate(720deg); opacity:.9; } }
 
-  @media (max-width:600px){ .polaroid img{height:220px} .timer div{min-width:64px} }
+  /* Music button */
+  #musicBtn { position:fixed; bottom:22px; right:22px; z-index:9; width:54px; height:54px; border-radius:50%;
+    border:none; cursor:pointer; font-size:1.4rem; background:rgba(192,132,252,.25); color:#fff;
+    border:1px solid rgba(192,132,252,.6); backdrop-filter:blur(6px); box-shadow:0 0 20px rgba(192,132,252,.4); }
+  #musicBtn.playing { animation:spin 3s linear infinite; }
+  @keyframes spin { to{transform:rotate(360deg)} }
+
+  @media (max-width:600px){ .polaroid img{height:220px} }
 </style>
 </head>
 <body>
@@ -119,20 +125,12 @@
 </div>
 <canvas id="fireworks"></canvas>
 
-<!-- ============ GATE / LOCK SCREEN ============ -->
+<!-- ============ GATE / LOCK SCREEN (no timer for preview) ============ -->
 <div id="gate">
   <div class="gift">🎁</div>
-  <div class="gate-title">Ek surprise tumhare intezaar me hai, Priyanka! 💌</div>
-  <div class="gate-sub">Bas thodi der aur... countdown khatam hote hi surprise khulega ✨</div>
-  <div class="countdown-card">
-    <div class="timer" id="timer">
-      <div><b id="h">--</b><small>HOURS</small></div>
-      <div><b id="m">--</b><small>MINUTES</small></div>
-      <div><b id="s">--</b><small>SECONDS</small></div>
-    </div>
-    <div class="burst-msg" id="burstMsg">🎉 Surprise unlock ho gaya!! Neeche wala button dabao 🎁</div>
-    <button class="unlock-btn" id="unlockBtn">🎁 Apna Surprise Kholo!</button>
-  </div>
+  <div class="gate-title">A little surprise is waiting for you, Priyanka! 💌</div>
+  <div class="gate-sub">Tap the gift and open something made just for you ✨</div>
+  <button class="unlock-btn" id="unlockBtn">🎁 Open Your Surprise!</button>
 </div>
 
 <!-- ============ SURPRISE CONTENT ============ -->
@@ -140,17 +138,21 @@
   <div class="content">
     <div class="welcome-pop">
       <div class="big">🎉 Welcome, Priyanka! 🎉</div>
-      <div class="sub">HappyBirthdayPeptidePriyanka — aaj ka poora aasman sirf tumhare liye! 🧪💕</div>
-      <div class="peptide">H₂N–Gly–Pro–Ile–Thr–COOH ...kyunki tum chemistry me hi best ho! ⚗️</div>
+      <div class="sub">HappyBirthdayPeptidePriyanka — today the whole sky celebrates you! 🧪💕</div>
+      <div class="peptide">H₂N–Gly–Pro–Ile–Thr–COOH ...because you are the best at chemistry! ⚗️</div>
     </div>
 
+    <!-- Short keyword wishes (English) -->
     <div class="wishes">
-      <div class="wish-card">Dear <b>Priyanka</b>, aaj ka din sirf tumhare liye hai! Duniya ki sabse <b>amazing, hardworking, talented aur humble</b> scientist ki birthday hai — toh lab ki saari reactions aaj tumhare naam pe celebrate hongi! ⚗️✨</div>
-      <div class="wish-card">Tum ek aisi <b>peptide scientist</b> ho jo molecules ko hi nahi, logon ke dil ko bhi bond karti ho. Cute bhi, brilliant bhi — <b>double bond of perfection!</b> 😄🔬</div>
-      <div class="wish-card">Tumhari <b>beautiful smile</b> se zyada bright koi chemical reaction nahi hoti, aur tumhari <b>cuteness</b> ke aage sucrose bhi fail ho jaata hai. Sach me, tum Nature ki best discovery ho! 🌟</div>
-      <div class="wish-card">Kitni <b>hardworking</b> ho tum — experiments, papers, research... sab kuch itni dedication se karti ho ki hum sab inspire ho jaate hain. Aur itni <b>humble</b> ho ki genius hone ka attitude tak nahi! 👑</div>
-      <div class="wish-card">Aaj ke din candles (phir bhi chemistry waali 😜), phir <b>cake</b>, aur unlimited khushiyan milne wali hain. Tension, stress, failed reactions — sab aaj expire ho jaayein! 🎈</div>
-      <div class="wish-card">Wish you a year full of <b>successful experiments</b>, beautiful memories, aur bohot saara pyaar. Stay the same sweet, talented, wonderful human that you are! 💖</div>
+      <div class="wish-chip">The most <b>Amazing</b> person 💫</div>
+      <div class="wish-chip">Super <b>Hardworking</b> 🔬</div>
+      <div class="wish-chip">Brilliantly <b>Talented</b> 🌟</div>
+      <div class="wish-chip">So <b>Humble</b> always 🤍</div>
+      <div class="wish-chip">Absolutely <b>Beautiful</b> ✨</div>
+      <div class="wish-chip">The <b>Cutest</b> girl ever 🥰</div>
+      <div class="wish-chip"><b>Peptide Scientist</b> vibes 🧬</div>
+      <div class="wish-chip">Best friend energy <b>forever</b> 💜</div>
+      <div class="wish-chip">Happy Birthday, <b>Priyanka!</b> 🎂</div>
     </div>
 
     <h2 style="font-family:'Baloo 2';color:#ffd166;margin-top:60px;">📸 Some Beautiful Moments 📸</h2>
@@ -166,6 +168,12 @@
   <footer>Made with 🧡, chemistry &amp; a little bit of code · 12 Nov · Priyanka's Day 💫</footer>
 </div>
 
+<!-- Background music -->
+<audio id="bdaySong" loop preload="auto">
+  <source src="https://cdn.pixabay.com/download/audio/2022/10/25/audio_a2a6d8d592.mp3?filename=happy-birthday-to-you-121660.mp3" type="audio/mpeg">
+</audio>
+<button id="musicBtn" title="Play / Pause music" style="display:none;">🎵</button>
+
 <script>
 const BASE = "https://raw.githubusercontent.com/sahilmaurya007/Priyanka-Birthday/47e1577ee7b076ea14316a0691fdf5687550f620/";
 const pics = [
@@ -180,10 +188,11 @@ const pics = [
   ["9th.png","Birthday girl in action 🎉"]
 ];
 const gallery = document.getElementById('gallery');
-pics.forEach(([f,cap],i)=>{
+pics.forEach(function(p,i){
   const d=document.createElement('div');
   d.className='polaroid'; d.style.setProperty('--r',((i%3)-1)*3+'deg');
-  d.innerHTML=`<img src="${BASE}${f}" alt="Priyanka photo ${i+1}" loading="lazy"><p>${cap}</p>`;
+  d.style.setProperty('--wd',(Math.random()*4)+'s');
+  d.innerHTML='<img src="'+BASE+p[0]+'" alt="Priyanka photo '+(i+1)+'" loading="lazy"><p>'+p[1]+'</p>';
   gallery.appendChild(d);
 });
 
@@ -235,38 +244,18 @@ let t=0;
   requestAnimationFrame(dnaLoop);
 })();
 
-/* ---- Countdown: Nov 12, 12:00 AM (midnight) IST ---- */
-const target = new Date("2026-11-12T00:00:00+05:30").getTime();
-const hEl=document.getElementById('h'), mEl=document.getElementById('m'), sEl=document.getElementById('s');
-function tick(){
-  let diff = target - Date.now();
-  if(diff <= 0){
-    document.getElementById('timer').style.display='none';
-    document.getElementById('burstMsg').style.display='block';
-    document.getElementById('unlockBtn').style.display='inline-block';
-    document.title="🎁 Surprise Ready, Priyanka!";
-    return;
-  }
-  const s=Math.floor(diff/1000), m=Math.floor(s/60), h=Math.floor(m/60);
-  hEl.textContent=h; mEl.textContent=m%60; sEl.textContent=s%60;
-  setTimeout(tick,1000);
-}
-tick();
-
 /* ---- Fireworks engine ---- */
 const canvas=document.getElementById('fireworks'), ctx=canvas.getContext('2d');
 let W,H,parts=[],rockets=[];
 function resize(){ W=canvas.width=innerWidth; H=canvas.height=innerHeight; }
 resize(); addEventListener('resize',resize);
 const COLORS=['#ffd166','#ef476f','#7ef9ff','#c084fc','#4ade80','#fb923c','#f472b6'];
-function launch(x,y){
-  x = (x===undefined) ? Math.random()*W : x;
-  const fromY = (y===undefined) ? H : y;
-  rockets.push({x:x, y:fromY, ty:fromY*0.25+Math.random()*fromY*0.3, vy:-(7+Math.random()*4),
+function launch(){
+  rockets.push({x:Math.random()*W, y:H, ty:H*0.25+Math.random()*H*0.3, vy:-(7+Math.random()*4),
     color:COLORS[Math.random()*COLORS.length|0]});
 }
-function explode(x,y,color,count){
-  const n=count||60+Math.random()*40;
+function explode(x,y,color){
+  const n=60+Math.random()*40;
   for(let i=0;i<n;i++){
     const a=Math.random()*Math.PI*2, sp=Math.random()*6+1;
     parts.push({x:x,y:y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,life:1,
@@ -294,7 +283,7 @@ function loop(){
 }
 loop();
 
-/* ---- Confetti (emoji) ---- */
+/* ---- Confetti ---- */
 function confettiBurst(){
   const em=["🎉","🎊","🧡","💜","🎂","✨","🎈","🧪","⚗️"];
   for(let i=0;i<50;i++){
@@ -307,7 +296,7 @@ function confettiBurst(){
   }
 }
 
-/* ---- Unlock surprise ---- */
+/* ---- Unlock surprise (click only, no timer for preview) ---- */
 let unlocked=false;
 document.getElementById('unlockBtn').addEventListener('click',function(){
   if(unlocked) return; unlocked=true;
@@ -316,19 +305,32 @@ document.getElementById('unlockBtn').addEventListener('click',function(){
   sup.style.display='block';
   requestAnimationFrame(function(){sup.classList.add('show');});
   document.title="🥳 Happy Birthday Priyanka!!";
-  /* Grand welcome: mega fireworks + confetti */
   for(let i=0;i<25;i++) setTimeout(launch,i*120);
   confettiBurst();
   setTimeout(confettiBurst,1500);
   setTimeout(confettiBurst,3200);
   setTimeout(function(){sup.scrollIntoView({behavior:'smooth'});},600);
+  startMusic();
+});
+
+/* ---- Background birthday music ---- */
+const song=document.getElementById('bdaySong'), musicBtn=document.getElementById('musicBtn');
+function startMusic(){
+  musicBtn.style.display='block';
+  song.volume=0.5;
+  song.play().then(function(){ musicBtn.textContent='🎶'; musicBtn.classList.add('playing'); })
+    .catch(function(){ musicBtn.textContent='🎵'; });
+}
+musicBtn.addEventListener('click',function(){
+  if(song.paused){ song.play(); musicBtn.textContent='🎶'; musicBtn.classList.add('playing'); }
+  else { song.pause(); musicBtn.textContent='🎵'; musicBtn.classList.remove('playing'); }
 });
 
 /* ---- Reveal on scroll ---- */
 const io=new IntersectionObserver(function(es){es.forEach(function(e){
   if(e.isIntersecting) e.target.classList.add(e.target.classList.contains('polaroid')?'in':'show');
 });},{threshold:.15});
-document.querySelectorAll('.wish-card,.polaroid').forEach(function(el){io.observe(el);});
+document.querySelectorAll('.wish-chip,.polaroid').forEach(function(el){io.observe(el);});
 </script>
 </body>
 </html>
