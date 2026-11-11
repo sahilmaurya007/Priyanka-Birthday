@@ -30,36 +30,46 @@ body { font-family:'Poppins',sans-serif; color:#fff; overflow-x:hidden; backgrou
 
 /* ===== 20s STORY ===== */
 .story { position:relative; border-radius:26px; overflow:hidden; margin:0 auto 34px; max-width:900px;
-  height:min(90vw,540px); box-shadow:0 20px 60px rgba(0,0,0,.6), 0 0 60px rgba(192,132,252,.25);
+  height:min(92vw,560px); box-shadow:0 20px 60px rgba(0,0,0,.6), 0 0 60px rgba(192,132,252,.25);
   border:1px solid rgba(192,132,252,.35); background:radial-gradient(circle at 50% 30%, #241058, #0a0426 70%); }
-.story canvas { position:absolute; inset:0; width:100%; height:100%; }
+.story canvas { position:absolute; inset:0; width:100%; height:100%; z-index:1; }
 .scene { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;
-  opacity:0; pointer-events:none; transition:opacity .7s ease; z-index:3; padding:16px; }
-.scene.on { opacity:1; }
-.sc-title { font-family:'Baloo 2',cursive; font-size:clamp(1.2rem,3.5vw,2rem); color:#ffd166; margin-top:16px;
-  text-shadow:0 0 18px rgba(255,209,102,.6); }
-.sc-text { font-family:'Baloo 2',cursive; font-size:clamp(1rem,2.8vw,1.6rem); line-height:1.8; max-width:640px;
-  color:#fff; text-shadow:0 0 14px rgba(255,209,102,.7), 0 0 30px rgba(239,71,111,.4); }
+  opacity:0; visibility:hidden; z-index:4; padding:14px; }
+.scene.on { opacity:1; visibility:visible; }
+.sc-title { font-family:'Baloo 2',cursive; font-size:clamp(1.15rem,3.2vw,1.9rem); color:#ffd166;
+  text-shadow:0 0 18px rgba(255,209,102,.7); }
+.sc-text { font-family:'Baloo 2',cursive; font-size:clamp(1rem,2.8vw,1.55rem); line-height:1.8; max-width:640px;
+  color:#fff; text-shadow:0 0 14px rgba(255,209,102,.8), 0 0 30px rgba(239,71,111,.5); }
 .sc-text .k { color:#ffd166; }
 .sig-line { font-family:'Dancing Script',cursive; font-size:clamp(1.6rem,5vw,3rem); color:#7ef9ff;
-  text-shadow:0 0 20px rgba(126,249,255,.8); }
+  text-shadow:0 0 22px rgba(126,249,255,.9); animation:sigPulse 1.4s ease-in-out infinite; }
+@keyframes sigPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.06)} }
 .sc-bar { position:absolute; top:0; left:0; height:5px; background:linear-gradient(90deg,#ffd166,#ef476f,#c084fc);
-  width:0%; z-index:5; transition:width .1s linear; }
-.replay-btn { position:absolute; bottom:14px; left:50%; transform:translateX(-50%); z-index:6; display:none;
+  width:0%; z-index:6; transition:width .1s linear; }
+.replay-btn { position:absolute; bottom:14px; left:50%; transform:translateX(-50%); z-index:7; display:none;
   padding:10px 26px; border:none; border-radius:50px; cursor:pointer; font-weight:600; color:#1a0533;
   background:linear-gradient(90deg,#ffd166,#ef476f); box-shadow:0 0 20px rgba(239,71,111,.6); }
 
-/* 3D photo cards - faces untouched */
-.photo3d { width:min(64vw,270px); height:min(52vw,320px); perspective:900px; }
-.photo3d .card3d { width:100%; height:100%; transform-style:preserve-3d; position:relative; opacity:0; }
-.photo3d .card3d.on { animation:spin3d 1.15s cubic-bezier(.2,1.4,.4,1) forwards; }
-@keyframes spin3d { 0%{opacity:0;transform:rotateY(95deg) scale(.6)} 60%{opacity:1;transform:rotateY(-14deg) scale(1.05)} 100%{opacity:1;transform:rotateY(0) scale(1)} }
-.card-face { position:absolute; inset:0; background:#fff; border-radius:16px; padding:9px 9px 8px;
-  box-shadow:0 18px 50px rgba(0,0,0,.6), 0 0 30px rgba(192,132,252,.35); }
-.card-face img { width:100%; height:74%; object-fit:cover; border-radius:10px; display:block; }
-.p3-key { font-family:'Baloo 2',cursive; font-size:clamp(1rem,2.8vw,1.4rem); margin-top:6px;
-  background:linear-gradient(90deg,#ffd166,#ef476f,#c084fc); -webkit-background-clip:text; background-clip:text; color:transparent; }
-.p3-wish { font-family:'Dancing Script',cursive; font-size:clamp(.9rem,2.4vw,1.15rem); color:#4a4a6a; }
+/* FULL photo slide (one by one) */
+.photo-slide { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  opacity:0; visibility:hidden; z-index:4; padding:14px; gap:10px; }
+.photo-slide.on { opacity:1; visibility:visible; }
+.ph-frame { position:relative; width:min(78vw,340px); height:min(56vw,340px);
+  transform-style:preserve-3d; }
+.ph-frame img { width:100%; height:100%; object-fit:cover; border-radius:18px;
+  border:5px solid #fff; box-shadow:0 18px 50px rgba(0,0,0,.65), 0 0 40px rgba(192,132,252,.4);
+  display:block; }
+.ph-frame.entering { animation:phEnter 1s cubic-bezier(.2,1.5,.4,1) forwards; }
+@keyframes phEnter {
+  0%{opacity:0;transform:perspective(900px) rotateY(100deg) scale(.55) translateY(40px)}
+  60%{opacity:1;transform:perspective(900px) rotateY(-12deg) scale(1.06) translateY(-6px)}
+  100%{opacity:1;transform:perspective(900px) rotateY(0) scale(1) translateY(0)} }
+.ph-key { font-family:'Baloo 2',cursive; font-size:clamp(1.15rem,3.2vw,1.7rem);
+  background:linear-gradient(90deg,#ffd166,#ef476f,#c084fc); -webkit-background-clip:text; background-clip:text; color:transparent;
+  text-shadow:0 0 16px rgba(239,71,111,.4); }
+.ph-quote { font-family:'Dancing Script',cursive; font-size:clamp(.95rem,2.5vw,1.25rem); color:#f8b4d9; }
+.ph-count { position:absolute; top:12px; right:16px; z-index:5; font-size:.8rem; color:#c7b8ff;
+  background:rgba(10,4,38,.6); border-radius:20px; padding:4px 12px; backdrop-filter:blur(4px); }
 
 /* Peptide Priyanka badge */
 .pp-badge { width:min(38vw,150px); height:min(38vw,150px); border-radius:50%; display:flex; align-items:center; justify-content:center;
@@ -159,20 +169,22 @@ footer { padding:30px; color:#8b7fbf; font-size:.85rem; position:relative; z-ind
     <div class="story" id="story">
       <canvas id="storyCanvas"></canvas>
       <div class="sc-bar" id="scBar"></div>
-      <div class="scene" id="sc1">
+      <!-- Scene 1: badge intro -->
+      <div class="scene" id="sc0">
         <div class="pp-badge"><div class="pp-text">Peptide<br>Priyanka</div></div>
         <div class="sc-title">⚗️ Dr. Priyanka's Birthday Lab! 🧪</div>
       </div>
-      <div class="scene" id="sc2">
-        <div class="photo3d"><div class="card3d" id="card3d">
-          <div class="card-face"><img id="p3img" src="" alt="Priyanka"><div class="p3-key" id="p3key"></div><div class="p3-wish" id="p3wish"></div></div>
-        </div></div>
-        <div class="sc-title" id="p3count" style="font-size:clamp(.9rem,2.4vw,1.2rem);color:#c7b8ff;"></div>
+      <!-- Scene 2: 9 full photos one by one -->
+      <div class="scene on-stage" id="photoHolder">
+        <div class="ph-count" id="phCount"></div>
+        <div id="photoArea" style="display:flex;flex-direction:column;align-items:center;gap:10px;"></div>
       </div>
-      <div class="scene" id="sc3">
+      <!-- Scene 3: glowing text -->
+      <div class="scene" id="sc2">
         <div class="sc-text" id="typeText"></div>
       </div>
-      <div class="scene" id="sc4">
+      <!-- Scene 4: finale -->
+      <div class="scene" id="sc3">
         <div class="sc-text" style="margin-bottom:18px;">🎂 Happy Birthday Dr. Priyanka! 🎂</div>
         <div class="sig-line">Best wishes, Sahil 💜</div>
       </div>
@@ -208,12 +220,18 @@ footer { padding:30px; color:#8b7fbf; font-size:.85rem; position:relative; z-ind
 <script>
 const BASE="https://raw.githubusercontent.com/sahilmaurya007/Priyanka-Birthday/47e1577ee7b076ea14316a0691fdf5687550f620/";
 const pics=[["1stpic.png","The superstar herself ⭐"],["2nd.png","Cutie alert! 🥰"],["3rd.png","Scientist vibes 🔬"],["4th.png","Beautiful as always 💖"],["5th.png","Smile that heals 💫"],["6th.png","Pure elegance 👑"],["7th.png","Cuteness overloaded 🐣"],["8th.png","Queen things 👸"],["9th.png","Birthday girl in action 🎉"]];
-/* keyword + funny wish per photo */
 const sk=[["Amazing","Lab ki queen, reactions ki boss! 👑"],["Hardworking","Papers bhi pass, cuteness bhi fail-safe! 😄"],["Talented","E=mc²? Nahi... E=Priyanka²! 🧪"],["Humble","Genius + zero attitude = rare species 🤍"],["Beautiful","Ye smile dekho, sucrose bhi jealous! 🍬"],["Cute","Warning: isse zyada cute ho hi nahi sakta 🐣"],["Brave","Failed reaction? Bhaad me jaaye, try again! 💪"],["Genius","Peptide ki PhD, hamari dilo ki bhi 💗"],["Superstar","Natural habitat: celebration mode 🎉"]];
 const gallery=document.getElementById('gallery');
 pics.forEach(function(p,i){const d=document.createElement('div');d.className='polaroid';d.style.setProperty('--r',((i%3)-1)*3+'deg');d.style.setProperty('--wd',(Math.random()*4)+'s');d.innerHTML='<img src="'+BASE+p[0]+'" alt="photo '+(i+1)+'" loading="lazy"><p>'+p[1]+'</p>';gallery.appendChild(d);});
-/* preload all photos so story never blanks */
-pics.forEach(function(p){const im=new Image();im.src=BASE+p[0];});
+
+/* PRELOAD all 9 photos — story starts only after they load */
+function preloadPhotos(){
+  return Promise.all(pics.map(function(p){
+    return new Promise(function(res){
+      const im=new Image();im.onload=im.onerror=res;im.src=BASE+p[0];
+    });
+  }));
+}
 
 const stars=document.getElementById('stars');
 for(let i=0;i<90;i++){const s=document.createElement('div');s.className='star';s.style.left=Math.random()*100+'%';s.style.top=Math.random()*100+'%';s.style.animationDelay=(Math.random()*3)+'s';s.style.transform='scale('+(.5+Math.random()*1.5)+')';stars.appendChild(s);}
@@ -258,12 +276,12 @@ addEventListener('resize',function(){molSize();makeMolecules();});
   });
   requestAnimationFrame(molLoop);})();
 
-/* ===== 20s STORY ===== */
-const story=document.getElementById('story'),sc=document.getElementById('storyCanvas'),sx=sc.getContext('2d');
-let SW,SH,sceneIdx=-1,mtS=0,fParts=[],fRockets=[];
-function storySize(){const r=story.getBoundingClientRect();SW=sc.width=Math.max(r.width,300)*2;SH=Math.max(r.height,300)*2;}
+/* ===== STORY canvas: fireworks + flower rain behind everything ===== */
+const sc=document.getElementById('storyCanvas'),sx=sc.getContext('2d');
+let SW,SH,mtS=0,fParts=[],fRockets=[];
+function storySize(){const r=sc.parentElement.getBoundingClientRect();SW=sc.width=Math.max(r.width,300)*2;SH=Math.max(r.height,300)*2;}
 storySize();addEventListener('resize',storySize);
-function sFirework(){fRockets.push({x:SW*(0.15+Math.random()*0.7),y:SH,ty:SH*(0.1+Math.random()*0.25),vy:-(5+Math.random()*3),color:['#ffd166','#ef476f','#c084fc','#7ef9ff','#f472b6'][Math.random()*5|0]});}
+function sFirework(){fRockets.push({x:SW*(0.15+Math.random()*0.7),y:SH,ty:SH*(0.08+Math.random()*0.22),vy:-(5+Math.random()*3),color:['#ffd166','#ef476f','#c084fc','#7ef9ff','#f472b6'][Math.random()*5|0]});}
 function sExplode(x,y,c){
   for(let i=0;i<45;i++){const a=Math.random()*Math.PI*2,sp=Math.random()*4.5+1;fParts.push({x:x,y:y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,life:1,color:c,petal:false});}
   for(let p=0;p<7;p++){const a=p/7*Math.PI*2;
@@ -273,8 +291,7 @@ function sExplode(x,y,c){
 (function drawStory(){
   mtS+=0.016;
   sx.clearRect(0,0,SW,SH);
-  /* fireworks + flower rain in ALL scenes (light) */
-  if(mtS%0.9<0.016)sFirework();
+  if(mtS%0.8<0.016)sFirework();
   fRockets=fRockets.filter(function(r){r.y+=r.vy;r.vy+=0.07;sx.beginPath();sx.arc(r.x,r.y,3,0,7);sx.fillStyle='#fff';sx.fill();
     if(r.y<=r.ty||r.vy>=0){sExplode(r.x,r.y,r.color);return false;}return true;});
   fParts=fParts.filter(function(p){
@@ -283,48 +300,50 @@ function sExplode(x,y,c){
     if(p.petal){sx.fillStyle=p.color;sx.beginPath();
       if(p.center){sx.arc(p.x,p.y,5,0,7);}else{sx.ellipse(p.x,p.y,7,3,p.pa,0,7);}sx.fill();}
     else{sx.beginPath();sx.arc(p.x,p.y,3,0,7);sx.fillStyle=p.color;sx.fill();}return true;});
-  /* gentle flower rain overlay in photo scene */
-  if(sceneIdx===1){
-    sx.globalAlpha=.9;
-    const fl=['🌸','🌺','🌼','💮'];
-    sx.font='26px serif';
-    for(let i=0;i<10;i++){
-      const fx=((i*167)+mtS*30)%SW;
-      const fy=((mtS*80+i*97)%(SH+60))-30;
-      sx.fillText(fl[i%4],fx,fy);
-    }
-    sx.globalAlpha=1;
+  /* flower rain always */
+  sx.font='30px serif';
+  const fl=['🌸','🌺','🌼','💮'];
+  for(let i=0;i<12;i++){
+    const fx=((i*167)+mtS*28)%SW;
+    const fy=((mtS*85+i*93)%(SH+80))-40;
+    sx.globalAlpha=.85;
+    sx.fillText(fl[i%4],fx,fy);
   }
   sx.globalAlpha=1;
   requestAnimationFrame(drawStory);
 })();
 
-const scenes=[document.getElementById('sc1'),document.getElementById('sc2'),document.getElementById('sc3'),document.getElementById('sc4')];
+/* ===== STORY TIMELINE (total 20s) ===== */
+const scenes=[document.getElementById('sc0'),document.getElementById('photoHolder'),document.getElementById('sc2'),document.getElementById('sc3')];
 const scBar=document.getElementById('scBar');
-const card3d=document.getElementById('card3d'),p3img=document.getElementById('p3img'),p3key=document.getElementById('p3key'),p3wish=document.getElementById('p3wish'),p3count=document.getElementById('p3count');
+const photoArea=document.getElementById('photoArea'),phCount=document.getElementById('phCount');
 const TYPE_MSG='Wishing a very Happy Birthday to the most <span class="k">amazing</span>, <span class="k">hardworking</span>, <span class="k">talented</span>, <span class="k">humble</span>, <span class="k">cute</span>, <span class="k">beautiful</span> and <span class="k">brave</span> girl, <span class="k">Dr. Priyanka!</span> 🎉🧪';
 let typeTimer=null,photoTimer=null;
-/* total 20s: 3 + 11 + 4 + 2 */
-const SCENE_LEN=[3,11,4,2];
+/* 3s intro + 13s photos + 3s text + 1s finale = 20s */
 function showScene(i,dur){
   scenes.forEach(function(s,j){s.classList.toggle('on',j===i);});
-  sceneIdx=i;
   clearInterval(photoTimer);clearInterval(typeTimer);
-  if(i===1){ /* 9 photos, 3D flip, fireworks+flowers above each */
-    let idx=0;
+  if(i===1){
+    photoArea.innerHTML='';let idx=0;
     function showPhoto(){
-      card3d.classList.remove('on');
-      void card3d.offsetWidth; /* restart animation */
-      p3img.src=BASE+pics[idx][0];
-      p3key.textContent=sk[idx][0]+' ✨';
-      p3wish.textContent='"'+sk[idx][1]+'"';
-      p3count.textContent='('+(idx+1)+'/9)';
-      sFirework();sFirework();sFirework();
-      card3d.classList.add('on');
+      photoArea.innerHTML='';
+      const f=document.createElement('div');f.className='ph-frame';
+      f.innerHTML='<img src="'+BASE+pics[idx][0]+'" alt="'+sk[idx][0]+'">';
+      const k=document.createElement('div');k.className='ph-key';k.textContent=sk[idx][0]+' ✨';
+      const q=document.createElement('div');q.className='ph-quote';q.textContent='"'+sk[idx][1]+'"';
+      photoArea.appendChild(f);photoArea.appendChild(k);photoArea.appendChild(q);
+      phCount.textContent=(idx+1)+' / 9';
+      void f.offsetWidth;
+      f.classList.add('entering');
+      sFirework();sFirework();
       idx++;
     }
     showPhoto();
-    photoTimer=setInterval(showPhoto,1150);
+    /* 9 photos, ~1.35s each */
+    photoTimer=setInterval(function(){
+      if(idx>=pics.length){clearInterval(photoTimer);return;}
+      showPhoto();
+    },1350);
   }
   if(i===2){
     const el=document.getElementById('typeText');el.innerHTML='';
@@ -332,17 +351,18 @@ function showScene(i,dur){
     typeTimer=setInterval(function(){
       if(ti>=tokens.length){clearInterval(typeTimer);return;}
       el.innerHTML+=tokens[ti];ti++;
-    },90);
+    },55);
   }
   const start=performance.now();
   (function bar(){const p=Math.min((performance.now()-start)/(dur*1000),1);scBar.style.width=(p*100)+'%';
-    if(p<1&&sceneIdx===i)requestAnimationFrame(bar);})();
+    if(p<1)requestAnimationFrame(bar);})();
 }
+const SCENE_LEN=[3,13,3,1];
 function playStory(){
   document.getElementById('replayBtn').style.display='none';
   let idx=0;
   (function next(){
-    if(idx>=SCENE_LEN.length){scenes.forEach(function(s){s.classList.remove('on');});scBar.style.width='0%';document.getElementById('replayBtn').style.display='block';return;}
+    if(idx>=SCENE_LEN.length){scenes.forEach(function(s){if(s.id!=='photoHolder')s.classList.remove('on');});scBar.style.width='0%';document.getElementById('replayBtn').style.display='block';return;}
     const dur=SCENE_LEN[idx];showScene(idx,dur);
     setTimeout(function(){idx++;next();},dur*1000);
   })();
@@ -389,65 +409,51 @@ for(let i=0;i<25;i++)setTimeout(launch,i*120);
 confettiBurst();setTimeout(confettiBurst,1500);setTimeout(confettiBurst,3200);
 setTimeout(function(){sup.scrollIntoView({behavior:'smooth'});},600);
 startMusic();
-setTimeout(playStory,800);
+/* story starts ONLY after all photos are loaded */
+preloadPhotos().then(function(){setTimeout(playStory,600);});
 });
 
-/* ===== MUSIC: Web Audio synthesized Happy Birthday (no URLs = always works) ===== */
+/* ===== MUSIC: Web Audio synthesized Happy Birthday ===== */
 const musicBtn=document.getElementById('musicBtn'),musicBox=document.getElementById('musicBox'),trackName=document.getElementById('trackName');
-let actx=null,musicPlaying=false,musicTimer=null,loopNode=null;
+let actx=null,musicPlaying=false,musicTimer=null;
 function noteFreq(n){return 440*Math.pow(2,(n-69)/12);}
-/* Happy Birthday melody: [semitone offsets from C4, beats] */
 const MELODY=[[0,.75],[2,.25],[2,1],[0,1],[4,1],[7,2],[7,.75],[4,.25],[4,1],[0,1],[5,1],[7,2],[7,.75],[9,.25],[9,1],[0,1],[2,1],[4,2],[4,.75],[0,.25],[0,1],[11,1],[7,1],[9,2],[9,.75],[7,.25],[7,1],[4,1],[2,1],[0,2]];
-function playMelodyOnce(ac,master){
-  let t=ac.currentTime+0.1;
+function playMelodyOnce(){
+  let t=actx.currentTime+0.1;
   MELODY.forEach(function(n){
     const dur=n[1]*0.42;
-    const o=ac.createOscillator(),g=ac.createGain();
-    o.type='triangle';
-    o.frequency.value=noteFreq(60+n[0]);
-    g.gain.setValueAtTime(0,t);
-    g.gain.linearRampToValueAtTime(0.28,t+0.03);
+    const o=actx.createOscillator(),g=actx.createGain();
+    o.type='triangle';o.frequency.value=noteFreq(60+n[0]);
+    g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.28,t+0.03);
     g.gain.exponentialRampToValueAtTime(0.001,t+dur*0.95);
-    o.connect(g);g.connect(master);
-    o.start(t);o.stop(t+dur);
-    /* soft harmony an octave below */
-    const o2=ac.createOscillator(),g2=ac.createGain();
+    o.connect(g);g.connect(actx.destination);o.start(t);o.stop(t+dur);
+    const o2=actx.createOscillator(),g2=actx.createGain();
     o2.type='sine';o2.frequency.value=noteFreq(48+n[0]);
     g2.gain.setValueAtTime(0,t);g2.gain.linearRampToValueAtTime(0.12,t+0.03);
     g2.gain.exponentialRampToValueAtTime(0.001,t+dur*0.95);
-    o2.connect(g2);g2.connect(master);o2.start(t);o2.stop(t+dur);
+    o2.connect(g2);g2.connect(actx.destination);o2.start(t);o2.stop(t+dur);
     t+=dur;
   });
-  return t-ac.currentTime;
+  return t-actx.currentTime;
+}
+function loopPlay(){
+  if(!musicPlaying)return;
+  const len=playMelodyOnce();
+  musicTimer=setTimeout(loopPlay,len*1000+500);
 }
 function startMusic(){
   musicBox.style.display='flex';
   try{
     actx=new (window.AudioContext||window.webkitAudioContext)();
-    const master=actx.createGain();master.gain.value=0.6;master.connect(actx.destination);
-    loopNode=master;
     musicPlaying=true;musicBtn.textContent='🎶';musicBtn.classList.add('playing');
-    trackName.textContent='Happy Birthday tune 🎂 (live synth)';
-    (function loopPlay(){
-      if(!musicPlaying)return;
-      const len=playMelodyOnce(actx,loopNode);
-      musicTimer=setTimeout(loopPlay,len*1000+500);
-    })();
+    trackName.textContent='Happy Birthday tune 🎂';
+    loopPlay();
   }catch(e){musicBtn.textContent='🔇';}
 }
 musicBtn.addEventListener('click',function(){
   if(!actx)return;
-  if(!musicPlaying){
-    musicPlaying=true;musicBtn.textContent='🎶';musicBtn.classList.add('playing');
-    (function loopPlay(){
-      if(!musicPlaying)return;
-      const len=playMelodyOnce(actx,loopNode);
-      musicTimer=setTimeout(loopPlay,len*1000+500);
-    })();
-  } else {
-    musicPlaying=false;clearTimeout(musicTimer);
-    musicBtn.textContent='🎵';musicBtn.classList.remove('playing');
-  }
+  if(!musicPlaying){musicPlaying=true;musicBtn.textContent='🎶';musicBtn.classList.add('playing');loopPlay();}
+  else{musicPlaying=false;clearTimeout(musicTimer);musicBtn.textContent='🎵';musicBtn.classList.remove('playing');}
 });
 
 const io=new IntersectionObserver(function(es){es.forEach(function(e){
