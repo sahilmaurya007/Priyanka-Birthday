@@ -27,20 +27,35 @@ body { font-family:'Poppins',sans-serif; color:#fff; overflow-x:hidden; backgrou
 @keyframes floaty { 0%,100%{transform:translateY(0) rotate(0)} 50%{transform:translateY(-28px) rotate(10deg)} }
 #fireworks { position:fixed; inset:0; z-index:2; pointer-events:none; }
 .content { position:relative; z-index:3; max-width:1100px; margin:0 auto; padding:50px 20px 40px; text-align:center; }
-.hero-video { position:relative; border-radius:26px; overflow:hidden; margin:0 auto 34px; max-width:900px;
-  height:min(56vw,420px); box-shadow:0 20px 60px rgba(0,0,0,.6), 0 0 60px rgba(192,132,252,.25);
-  border:1px solid rgba(192,132,252,.35); }
-.hero-video canvas { position:absolute; inset:0; width:100%; height:100%; }
-.hero-overlay { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:2; }
-.hero-line { font-family:'Baloo 2',cursive; font-size:clamp(1.8rem,6vw,3.6rem);
-  background:linear-gradient(90deg,#ffd166,#ef476f,#c084fc,#7ef9ff); background-size:300% 100%;
-  -webkit-background-clip:text; background-clip:text; color:transparent;
-  animation:shimmer 5s linear infinite, glowPulse 2.4s ease-in-out infinite; }
-@keyframes shimmer { to{background-position:300% 0} }
-@keyframes glowPulse { 0%,100%{filter:drop-shadow(0 0 8px rgba(255,209,102,.4))} 50%{filter:drop-shadow(0 0 22px rgba(239,71,111,.7))} }
-.hero-sub { font-family:'Dancing Script',cursive; font-size:clamp(1.1rem,3vw,1.8rem); color:#ffd166; margin-top:8px; }
-.gift-fly { position:absolute; font-size:2.4rem; z-index:1; animation:flyUp linear infinite; opacity:.9; }
-@keyframes flyUp { from{transform:translateY(110%) rotate(0)} to{transform:translateY(-30%) rotate(360deg)} }
+
+/* ===== 30-sec animated story player ===== */
+.story { position:relative; border-radius:26px; overflow:hidden; margin:0 auto 34px; max-width:900px;
+  height:min(75vw,500px); box-shadow:0 20px 60px rgba(0,0,0,.6), 0 0 60px rgba(192,132,252,.25);
+  border:1px solid rgba(192,132,252,.35); background:#08031a; }
+.story canvas { position:absolute; inset:0; width:100%; height:100%; }
+.scene { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  opacity:0; pointer-events:none; transition:opacity 1s ease; z-index:3; padding:16px; }
+.scene.on { opacity:1; }
+.sc-imgs { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; }
+.sc-imgs img { width:110px; height:130px; object-fit:cover; border-radius:14px; border:3px solid rgba(255,255,255,.85);
+  box-shadow:0 10px 30px rgba(0,0,0,.5); opacity:0; transform:scale(0) rotate(-15deg); }
+.scene.on .sc-imgs img { animation:popBounce .9s cubic-bezier(.2,1.6,.4,1) forwards; }
+.scene.on .sc-imgs img:nth-child(1){animation-delay:.15s}.scene.on .sc-imgs img:nth-child(2){animation-delay:.4s}
+.scene.on .sc-imgs img:nth-child(3){animation-delay:.65s}.scene.on .sc-imgs img:nth-child(4){animation-delay:.9s}
+.scene.on .sc-imgs img:nth-child(5){animation-delay:1.15s}.scene.on .sc-imgs img:nth-child(6){animation-delay:1.4s}
+@keyframes popBounce { 0%{opacity:0;transform:scale(0) rotate(-15deg)} 60%{opacity:1;transform:scale(1.15) rotate(5deg)} 100%{opacity:1;transform:scale(1) rotate(0)} }
+.sc-title { font-family:'Baloo 2',cursive; font-size:clamp(1.2rem,3.5vw,2rem); color:#ffd166; margin-top:16px; }
+.sc-text { font-family:'Baloo 2',cursive; font-size:clamp(1rem,2.8vw,1.6rem); line-height:1.8; max-width:640px;
+  color:#fff; text-shadow:0 0 14px rgba(255,209,102,.7), 0 0 30px rgba(239,71,111,.4); }
+.sc-text .k { color:#ffd166; }
+.sig-line { font-family:'Dancing Script',cursive; font-size:clamp(1.6rem,5vw,3rem); color:#7ef9ff;
+  text-shadow:0 0 20px rgba(126,249,255,.8); }
+.sc-bar { position:absolute; top:0; left:0; height:5px; background:linear-gradient(90deg,#ffd166,#ef476f,#c084fc);
+  width:0%; z-index:5; transition:width .1s linear; }
+.replay-btn { position:absolute; bottom:14px; left:50%; transform:translateX(-50%); z-index:6; display:none;
+  padding:10px 26px; border:none; border-radius:50px; cursor:pointer; font-weight:600; color:#1a0533;
+  background:linear-gradient(90deg,#ffd166,#ef476f); box-shadow:0 0 20px rgba(239,71,111,.6); }
+
 .sub { font-family:'Dancing Script',cursive; font-size:clamp(1.3rem,3vw,2rem); color:#ffd166; margin:14px 0 8px; }
 .peptide { font-family:monospace; letter-spacing:3px; color:#7ef9ff; font-size:.95rem; margin-bottom:10px; }
 #gate { position:fixed; inset:0; z-index:10; display:flex; flex-direction:column; align-items:center; justify-content:center;
@@ -54,6 +69,7 @@ body { font-family:'Poppins',sans-serif; color:#fff; overflow-x:hidden; backgrou
   cursor:pointer; color:#1a0533; background:linear-gradient(90deg,#ffd166,#ef476f,#c084fc); background-size:200% auto;
   box-shadow:0 0 30px rgba(239,71,111,.6); animation:shine 2s linear infinite, pulse 1.2s ease-in-out infinite; }
 @keyframes shine { to{background-position:200% center} }
+@keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.03)} }
 #surprise { display:none; }
 #surprise.show { display:block; animation:fadeIn 1.4s ease; }
 @keyframes fadeIn { from{opacity:0} to{opacity:1} }
@@ -97,7 +113,7 @@ footer { padding:30px; color:#8b7fbf; font-size:.85rem; position:relative; z-ind
 @keyframes spin { to{transform:rotate(360deg)} }
 #musicInfo { font-size:.8rem; color:#e6ddff; max-width:150px; }
 #musicInfo small { display:block; color:#a293d9; }
-@media (max-width:600px){ .polaroid img{height:220px} }
+@media (max-width:600px){ .polaroid img{height:220px} .sc-imgs img{width:76px;height:92px} }
 </style>
 </head>
 <body>
@@ -119,13 +135,28 @@ footer { padding:30px; color:#8b7fbf; font-size:.85rem; position:relative; z-ind
 <div id="surprise">
   <div class="content">
     <div class="welcome-pop"><div class="big">🎉 Welcome, Priyanka! 🎉</div></div>
-    <div class="hero-video">
-      <canvas id="heroCanvas"></canvas>
-      <div class="hero-overlay">
-        <div class="hero-line">🎂 Happy Birthday Priyanka 🎂</div>
-        <div class="hero-sub">chemistry ka sabse beautiful reaction ✨🧪</div>
+
+    <!-- 30-sec animated story -->
+    <div class="story" id="story">
+      <canvas id="storyCanvas"></canvas>
+      <div class="sc-bar" id="scBar"></div>
+      <div class="scene" id="sc1">
+        <div class="sc-imgs" id="scImgs"></div>
+        <div class="sc-title">⚗️ Dr. Priyanka's Birthday Lab! 🧪</div>
       </div>
+      <div class="scene" id="sc2">
+        <div class="sc-title">🎆 The whole sky celebrates YOU! 🎇</div>
+      </div>
+      <div class="scene" id="sc3">
+        <div class="sc-text" id="typeText"></div>
+      </div>
+      <div class="scene" id="sc4">
+        <div class="sc-text" style="margin-bottom:18px;">🎂 Happy Birthday Dr. Priyanka! 🎂</div>
+        <div class="sig-line">Best wishes, Sahil 💜</div>
+      </div>
+      <button class="replay-btn" id="replayBtn">↻ Watch Again</button>
     </div>
+
     <div class="sub">HappyBirthdayPeptidePriyanka — today the whole sky celebrates you! 🧪💕</div>
     <div class="peptide">H₂N–Gly–Pro–Ile–Thr–COOH ...because you are the best at chemistry! ⚗️</div>
     <div class="wishes">
@@ -135,9 +166,8 @@ footer { padding:30px; color:#8b7fbf; font-size:.85rem; position:relative; z-ind
       <div class="wish-chip">So <b>Humble</b> always 🤍</div>
       <div class="wish-chip">Absolutely <b>Beautiful</b> ✨</div>
       <div class="wish-chip">The <b>Cutest</b> girl ever 🥰</div>
-      <div class="wish-chip"><b>Peptide Scientist</b> vibes 🧬</div>
+      <div class="wish-chip">Brave <b>Peptide Scientist</b> 🧬</div>
       <div class="wish-chip">Best friend energy <b>forever</b> 💜</div>
-      <div class="wish-chip">Happy Birthday, <b>Priyanka!</b> 🎂</div>
     </div>
     <h2 style="font-family:'Baloo 2';color:#ffd166;margin-top:60px;">📸 Some Beautiful Moments 📸</h2>
     <div class="gallery" id="gallery"></div>
@@ -160,97 +190,146 @@ const BASE="https://raw.githubusercontent.com/sahilmaurya007/Priyanka-Birthday/4
 const pics=[["1stpic.png","The superstar herself ⭐"],["2nd.png","Cutie alert! 🥰"],["3rd.png","Scientist vibes 🔬"],["4th.png","Beautiful as always 💖"],["5th.png","Smile that heals 💫"],["6th.png","Pure elegance 👑"],["7th.png","Cuteness overloaded 🐣"],["8th.png","Queen things 👸"],["9th.png","Birthday girl in action 🎉"]];
 const gallery=document.getElementById('gallery');
 pics.forEach(function(p,i){const d=document.createElement('div');d.className='polaroid';d.style.setProperty('--r',((i%3)-1)*3+'deg');d.style.setProperty('--wd',(Math.random()*4)+'s');d.innerHTML='<img src="'+BASE+p[0]+'" alt="photo '+(i+1)+'" loading="lazy"><p>'+p[1]+'</p>';gallery.appendChild(d);});
+/* scene1 pop images (first 6) */
+const scImgs=document.getElementById('scImgs');
+pics.slice(0,6).forEach(function(p){const im=document.createElement('img');im.src=BASE+p[0];im.alt=p[1];scImgs.appendChild(im);});
 
-/* stars + symbols */
 const stars=document.getElementById('stars');
 for(let i=0;i<90;i++){const s=document.createElement('div');s.className='star';s.style.left=Math.random()*100+'%';s.style.top=Math.random()*100+'%';s.style.animationDelay=(Math.random()*3)+'s';s.style.transform='scale('+(.5+Math.random()*1.5)+')';stars.appendChild(s);}
 const symsEl=document.getElementById('syms');
 const syms=["⚗️","🧪","🧬","⚛️","🔬","🧫"];
 for(let i=0;i<10;i++){const s=document.createElement('span');s.className='float-sym';s.textContent=syms[i%syms.length];s.style.left=(Math.random()*92)+'%';s.style.top=(Math.random()*92)+'%';s.style.fontSize=(20+Math.random()*26)+'px';s.style.animationDelay=(Math.random()*7)+'s';symsEl.appendChild(s);}
 
-/* ===== Molecular animation background (chemistry molecules + bonds) ===== */
+/* ===== molecular background ===== */
 const mc=document.getElementById('molCanvas'),mx=mc.getContext('2d');
 let MW,MH,mols=[];
 function molSize(){MW=mc.width=innerWidth;MH=mc.height=innerHeight;}
-molSize();addEventListener('resize',molSize);
+molSize();addEventListener('resize',function(){molSize();makeMolecules();});
 function makeMolecules(){
   mols=[];
   const n=Math.max(5,Math.floor(MW/260));
   for(let g=0;g<n;g++){
-    // random small molecule: chain/ring of atoms with bonds
-    const cx=Math.random()*MW, cy=Math.random()*MH;
-    const atoms=[];
-    const type=Math.random();
-    if(type<0.45){ // ring (benzene-like)
-      const cnt=6, R=28+Math.random()*22;
-      for(let i=0;i<cnt;i++){const a=i/cnt*Math.PI*2;atoms.push({x:cx+Math.cos(a)*R,y:cy+Math.sin(a)*R});}
-    } else { // chain (peptide-like)
-      const cnt=3+Math.floor(Math.random()*3);
-      let x=cx,y=cy;
-      for(let i=0;i<cnt;i++){atoms.push({x:x,y:y});x+=(40+Math.random()*30)*(Math.random()<.5?1:-1);y+=(20+Math.random()*30)*(Math.random()<.5?1:-1);}
-    }
+    const cx=Math.random()*MW, cy=Math.random()*MH; const atoms=[];
+    if(Math.random()<0.45){const cnt=6,R=28+Math.random()*22;for(let i=0;i<cnt;i++){const a=i/cnt*Math.PI*2;atoms.push({x:cx+Math.cos(a)*R,y:cy+Math.sin(a)*R});}}
+    else{const cnt=3+Math.floor(Math.random()*3);let x=cx,y=cy;for(let i=0;i<cnt;i++){atoms.push({x:x,y:y});x+=(40+Math.random()*30)*(Math.random()<.5?1:-1);y+=(20+Math.random()*30)*(Math.random()<.5?1:-1);}}
     mols.push({atoms,vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,hue:Math.random()<.5?'126,249,255':'192,132,252'});
   }
 }
-makeMolecules();addEventListener('resize',makeMolecules);
+makeMolecules();
 let mt=0;
-(function molLoop(){
-  mx.clearRect(0,0,MW,MH);
-  mt+=0.01;
+(function molLoop(){mx.clearRect(0,0,MW,MH);mt+=0.01;
   mols.forEach(function(m){
     m.atoms.forEach(function(a){a.x+=m.vx;a.y+=m.vy;});
     const bx=m.atoms[0];
     if(bx.x<-80||bx.x>MW+80)m.vx*=-1;
     if(bx.y<-80||bx.y>MH+80)m.vy*=-1;
-    // bonds
     mx.strokeStyle='rgba('+m.hue+',.28)';mx.lineWidth=2;
-    for(let i=0;i<m.atoms.length;i++){
-      const a=m.atoms[i],b=m.atoms[(i+1)%m.atoms.length];
-      if(m.atoms.length>2||i<m.atoms.length-1){
-        mx.beginPath();mx.moveTo(a.x,a.y);mx.lineTo(b.x,b.y);mx.stroke();
-      }
-    }
-    // atoms with glow pulse
-    m.atoms.forEach(function(a,i){
-      const r=5+Math.sin(mt*3+i)*1.2;
+    for(let i=0;i<m.atoms.length;i++){const a=m.atoms[i],b=m.atoms[(i+1)%m.atoms.length];
+      if(m.atoms.length>2||i<m.atoms.length-1){mx.beginPath();mx.moveTo(a.x,a.y);mx.lineTo(b.x,b.y);mx.stroke();}}
+    m.atoms.forEach(function(a,i){const r=5+Math.sin(mt*3+i)*1.2;
       const grad=mx.createRadialGradient(a.x,a.y,0,a.x,a.y,r*3);
-      grad.addColorStop(0,'rgba('+m.hue+',.9)');
-      grad.addColorStop(1,'rgba('+m.hue+',0)');
-      mx.fillStyle=grad;
-      mx.beginPath();mx.arc(a.x,a.y,r*3,0,7);mx.fill();
-      mx.fillStyle='rgba(255,255,255,.85)';
-      mx.beginPath();mx.arc(a.x,a.y,r*.8,0,7);mx.fill();
-    });
+      grad.addColorStop(0,'rgba('+m.hue+',.9)');grad.addColorStop(1,'rgba('+m.hue+',0)');
+      mx.fillStyle=grad;mx.beginPath();mx.arc(a.x,a.y,r*3,0,7);mx.fill();
+      mx.fillStyle='rgba(255,255,255,.85)';mx.beginPath();mx.arc(a.x,a.y,r*.8,0,7);mx.fill();});
   });
-  requestAnimationFrame(molLoop);
-})();
+  requestAnimationFrame(molLoop);})();
 
-/* ===== Hero canvas: molecule fireworks + orbiting peptide ===== */
-const hero=document.getElementById('heroCanvas'),hx=hero.getContext('2d');
-let hW,hH,hParts=[],hRockets=[];
-function heroSize(){const r=hero.parentElement.getBoundingClientRect();hW=hero.width=r.width*2;hH=hero.height=r.height*2;}
-heroSize();addEventListener('resize',heroSize);
-const GC=['#ffd166','#ef476f','#c084fc','#7ef9ff','#4ade80','#f472b6'];
-const giftEm=["🎁","🎂","🎈","🧪","⚗️","🧬"];
-for(let i=0;i<10;i++){const g=document.createElement('div');g.className='gift-fly';g.textContent=giftEm[i%giftEm.length];g.style.left=(Math.random()*90)+'%';g.style.animationDuration=(6+Math.random()*8)+'s';g.style.animationDelay=(Math.random()*8)+'s';document.querySelector('.hero-video').appendChild(g);}
-function hLaunch(){hRockets.push({x:Math.random()*hW,y:hH,ty:hH*0.15+Math.random()*hH*0.3,vy:-(6+Math.random()*4),color:GC[Math.random()*GC.length|0]});}
-function hExplode(x,y,color){
-  const cx=x,cy=y;
-  for(let i=0;i<40;i++){const a=Math.random()*Math.PI*2,sp=Math.random()*5+1;hParts.push({x:x,y:y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,life:1,color:color});}
-  // atom burst ring: 6 atoms forming a mini molecule after explosion
-  for(let i=0;i<6;i++){const a=i/6*Math.PI*2;hParts.push({x:x+Math.cos(a)*14,y:y+Math.sin(a)*14,vx:Math.cos(a)*1.4,vy:Math.sin(a)*1.4,life:1.3,color:'#7ef9ff',ring:true});}
+/* ===== STORY PLAYER: 30s, 4 scenes ===== */
+const story=document.getElementById('story'),sc=document.getElementById('storyCanvas'),sx=sc.getContext('2d');
+let SW,SH;
+function storySize(){const r=story.getBoundingClientRect();SW=sc.width=r.width*2;SH=sc.height=r.height*2;}
+storySize();addEventListener('resize',storySize);
+let bubbles=[],flames=[],sParts=[],sRockets=[],sceneIdx=-1,sceneT=0,storyRunning=false,typeTimer=null;
+const SCENE_LEN=[8,7,9,6]; // 30 seconds total
+function initLab(){bubbles=[];flames=[];for(let i=0;i<26;i++)bubbles.push({x:Math.random()*SW,y:SH*0.35+Math.random()*SH*0.6,r:4+Math.random()*10,v:1+Math.random()*2.2,hu:Math.random()<.5?'126,249,255':'192,132,252'});for(let i=0;i<8;i++)flames.push({x:SW*(0.08+i*0.12),h:30+Math.random()*40,ph:Math.random()*6});}
+function storyFirework(){sRockets.push({x:Math.random()*SW,y:SH,ty:SH*0.12+Math.random()*SH*0.35,vy:-(6+Math.random()*4),color:['#ffd166','#ef476f','#c084fc','#7ef9ff','#4ade80','#f472b6'][Math.random()*6|0]});}
+function storyExplode(x,y,c){for(let i=0;i<55;i++){const a=Math.random()*Math.PI*2,sp=Math.random()*5+1;sParts.push({x:x,y:y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,life:1,color:c});}}
+function drawStory(){
+  sx.clearRect(0,0,SW,SH);
+  if(sceneIdx===0){ /* Scene1: chemistry lab */
+    sx.fillStyle='rgba(20,10,50,.55)';sx.fillRect(0,0,SW,SH);
+    // lab bench
+    sx.fillStyle='rgba(123,97,255,.25)';sx.fillRect(0,SH*0.82,SW,SH*0.18);
+    // flasks
+    for(let i=0;i<8;i++){
+      const fx=SW*(0.08+i*0.12), fy=SH*0.82, fh=70+((i*37)%40), fw=34;
+      sx.strokeStyle='rgba(126,249,255,.7)';sx.lineWidth=3;
+      sx.beginPath();sx.ellipse(fx,fy-fh/2,fw/2,fh/2,0,0,7);sx.stroke();
+      sx.beginPath();sx.moveTo(fx-fw/2,fy-fh);sx.lineTo(fx+fw/2,fy-fh);sx.stroke();
+      sx.fillStyle=['rgba(126,249,255,.35)','rgba(192,132,252,.35)','rgba(255,209,102,.35)','rgba(74,222,128,.35)'][i%4];
+      sx.beginPath();sx.ellipse(fx,fy-fh/2,fw/2-4,fh/2-6,0,0,7);sx.fill();
+    }
+    // glowing test tubes
+    for(let i=0;i<8;i++){const tx=SW*(0.1+i*0.115),ty=SH*0.82;const th=50;
+      sx.strokeStyle='rgba(255,209,102,.6)';sx.lineWidth=2;
+      sx.strokeRect(tx,ty-th,16,th);
+      sx.fillStyle='rgba(239,71,111,.35)';sx.fillRect(tx+2,ty-th*0.55,12,th*0.5);}
+    // floating peptide chains (3D-ish)
+    for(let g=0;g<3;g++){
+      const py=SH*(0.18+g*0.12), wob=Math.sin(mtS*2+g)*20;
+      sx.strokeStyle='rgba(192,132,252,.5)';sx.lineWidth=3;
+      for(let i=0;i<7;i++){const px=SW*(0.2+i*0.1)+wob, pr=9+Math.sin(mtS*3+i)*2;
+        const grad=sx.createRadialGradient(px,py,0,px,py,pr*2.4);grad.addColorStop(0,'rgba(126,249,255,.9)');grad.addColorStop(1,'rgba(126,249,255,0)');
+        sx.fillStyle=grad;sx.beginPath();sx.arc(px,py,pr*2.4,0,7);sx.fill();
+        sx.fillStyle='#fff';sx.beginPath();sx.arc(px,py,pr*.7,0,7);sx.fill();
+        if(i<6){sx.beginPath();sx.moveTo(px,py);sx.lineTo(SW*(0.2+(i+1)*0.1)+wob,py);sx.stroke();}}
+    }
+    // rising bubbles
+    bubbles.forEach(function(b){b.y-=b.v;if(b.y<SH*0.2)b.y=SH*0.95;
+      sx.strokeStyle='rgba('+b.hu+',.6)';sx.lineWidth=1.5;
+      sx.beginPath();sx.arc(b.x,b.y,b.r,0,7);sx.stroke();});
+  } else if(sceneIdx===1||sceneIdx===3){ /* Scene2/4: fireworks sky */
+    sx.fillStyle='rgba(5,1,20,.35)';sx.fillRect(0,0,SW,SH);
+    sRockets=sRockets.filter(function(r){r.y+=r.vy;r.vy+=0.07;sx.beginPath();sx.arc(r.x,r.y,3,0,7);sx.fillStyle='#fff';sx.fill();
+      if(r.y<=r.ty||r.vy>=0){storyExplode(r.x,r.y,r.color);return false;}return true;});
+    sParts=sParts.filter(function(p){p.x+=p.vx;p.y+=p.vy;p.vy+=0.05;p.vx*=0.985;p.vy*=0.985;p.life-=0.013;
+      if(p.life<=0)return false;sx.globalAlpha=p.life;sx.beginPath();sx.arc(p.x,p.y,3,0,7);sx.fillStyle=p.color;sx.fill();return true;});
+    sx.globalAlpha=1;
+  } else { /* Scene3: soft starry sky behind text */
+    sx.fillStyle='rgba(8,3,26,.5)';sx.fillRect(0,0,SW,SH);
+    for(let i=0;i<40;i++){const px=(i*173)%SW, py=(i*97)%SH, tw=0.4+Math.abs(Math.sin(mtS*2+i))*0.6;
+      sx.globalAlpha=tw;sx.fillStyle='#fff';sx.beginPath();sx.arc(px,py,2,0,7);sx.fill();}
+    sx.globalAlpha=1;
+  }
+  requestAnimationFrame(drawStory);
 }
-(function heroLoop(){
-  hx.clearRect(0,0,hW,hH);hx.globalCompositeOperation='lighter';
-  hRockets=hRockets.filter(function(r){r.y+=r.vy;r.vy+=0.07;hx.beginPath();hx.arc(r.x,r.y,3,0,7);hx.fillStyle='#fff';hx.fill();
-  if(r.y<=r.ty||r.vy>=0){hExplode(r.x,r.y,r.color);return false;}return true;});
-  hParts=hParts.filter(function(p){
-    p.x+=p.vx;p.y+=p.vy;p.vy+=(p.ring?0.008:0.05);p.vx*=0.985;p.vy*=0.985;p.life-=(p.ring?0.008:0.015);
-    if(p.life<=0)return false;
-    hx.globalAlpha=Math.min(p.life,1);
-    hx.beginPath();hx.arc(p.x,p.y,p.ring?5:3,0,7);hx.fillStyle=p.color;hx.fill();return true;});
-  hx.globalAlpha=1;requestAnimationFrame(heroLoop);})();
-setInterval(hLaunch,600);
+let mtS=0;
+(function(){mtS+=0.016;requestAnimationFrame(arguments.callee);})();
+const scenes=[document.getElementById('sc1'),document.getElementById('sc2'),document.getElementById('sc3'),document.getElementById('sc4')];
+const scBar=document.getElementById('scBar');
+const TYPE_MSG='Wishing a very Happy Birthday to the most <span class="k">amazing</span>, <span class="k">hardworking</span>, <span class="k">talented</span>, <span class="k">humble</span>, <span class="k">cute</span>, <span class="k">beautiful</span> and <span class="k">brave</span> girl, <span class="k">Dr. Priyanka!</span> 🎉🧪';
+function showScene(i,dur){
+  scenes.forEach(function(s,j){s.classList.toggle('on',j===i);});
+  sceneIdx=i;sceneT=0;
+  if(i===0){initLab();}
+  if(i===1||i===3){sParts=[];sRockets=[];for(let k=0;k<10;k++)setTimeout(storyFirework,k*180);}
+  if(i===3){for(let k=0;k<6;k++)setTimeout(storyFirework,2500+k*200);}
+  if(i===2){
+    const el=document.getElementById('typeText');el.innerHTML='';
+    clearInterval(typeTimer);
+    const tokens=TYPE_MSG.split(/(<[^>]+>|\s+)/);let ti=0;
+    typeTimer=setInterval(function(){
+      if(ti>=tokens.length){clearInterval(typeTimer);return;}
+      el.innerHTML+=tokens[ti];ti++;
+    },110);
+  }
+  const start=performance.now();
+  function bar(){const p=Math.min((performance.now()-start)/(dur*1000),1);scBar.style.width=(p*100)+'%';
+    if(p<1&&sceneIdx===i)requestAnimationFrame(bar);}
+  bar();
+}
+function playStory(){
+  storyRunning=true;document.getElementById('replayBtn').style.display='none';
+  let idx=0;
+  function next(){
+    if(idx>=SCENE_LEN.length){storyRunning=false;scenes.forEach(function(s){s.classList.remove('on');});scBar.style.width='0%';document.getElementById('replayBtn').style.display='block';return;}
+    const dur=SCENE_LEN[idx];showScene(idx,dur);
+    setTimeout(function(){idx++;next();},dur*1000);
+  }
+  next();
+}
+document.getElementById('replayBtn').addEventListener('click',function(){playStory();});
+drawStory();
 
 /* full-page fireworks */
 const canvas=document.getElementById('fireworks'),ctx=canvas.getContext('2d');
@@ -281,7 +360,9 @@ document.title="🥳 Happy Birthday Priyanka!!";
 for(let i=0;i<25;i++)setTimeout(launch,i*120);
 confettiBurst();setTimeout(confettiBurst,1500);setTimeout(confettiBurst,3200);
 setTimeout(function(){sup.scrollIntoView({behavior:'smooth'});},600);
-startMusic();});
+startMusic();
+setTimeout(playStory,1000);
+});
 
 /* multi-track vibe music */
 const TRACKS=[
